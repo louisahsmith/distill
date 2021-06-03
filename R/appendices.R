@@ -115,19 +115,29 @@ appendix_citation <- function(site_config, metadata) {
     # ToDo: it would be nicer if we could auto-generate short citation according to csl file user provides. `multiple-bibliographies.lua` (https://github.com/pandoc/lua-filters/tree/master/multiple-bibliographies) can be considered to avoid any conflict with main text references div.
     short_citation <- function() {
       if (!is.null(metadata$journal$title)) {
-        sprintf('%s, "%s", %s, %s',
+        sprintf('%s, "%s". %s, %s.',
                 metadata$concatenated_authors,
-                qualified_title(site_config, metadata),
+                metadata$title,
                 metadata$journal$title,
                 metadata$published_year)
       } else if (!is.null(metadata$conference$title)) {
-        sprintf('%s, "%s", %s, %s',
+        sprintf('%s, "%s" %s, %s.',
                 metadata$concatenated_authors,
-                qualified_title(site_config, metadata),
+                metadata$title,
                 metadata$conference$title,
                 metadata$published_year)
+      } else if (!is.null(metadata$thesis$type)) {
+        sprintf('%s, "%s". %s.',
+                metadata$concatenated_authors,
+                metadata$title,
+                metadata$published_year)
+      } else if (length(metadata$technical_report) != 0) {
+        sprintf('%s, "%s". %s.',
+                metadata$concatenated_authors,
+                metadata$title,
+                metadata$published_year)
       } else {
-        sprintf('%s (%s, %s %d). %s. Retrieved from %s',
+        sprintf('%s (%s, %s %d). %s. Retrieved from %s.',
                 metadata$concatenated_authors,
                 metadata$published_year,
                 metadata$published_month,
@@ -167,7 +177,7 @@ appendix_citation <- function(site_config, metadata) {
                       sep = '\n'),
                 metadata$slug,
                 metadata$bibtex_authors,
-                qualified_title(site_config, metadata),
+                metadata$title,
                 metadata$journal$title,
                 metadata$published_year,
                 suffix
@@ -202,7 +212,7 @@ appendix_citation <- function(site_config, metadata) {
                       sep = '\n'),
                 metadata$slug,
                 metadata$bibtex_authors,
-                qualified_title(site_config, metadata),
+                metadata$title,
                 metadata$conference$title,
                 metadata$published_year,
                 metadata$published_month,
@@ -241,7 +251,7 @@ appendix_citation <- function(site_config, metadata) {
                       sep = '\n'),
                 thesis_entry,
                 metadata$bibtex_authors,
-                qualified_title(site_config, metadata),
+                metadata$title,
                 metadata$author[[1]]$affiliation,
                 metadata$published_year,
                 metadata$published_month,
@@ -275,7 +285,7 @@ appendix_citation <- function(site_config, metadata) {
                       sep = '\n'),
                 metadata$slug,
                 metadata$bibtex_authors,
-                qualified_title(site_config, metadata),
+                metadata$title,
                 metadata$author[[1]]$affiliation,
                 metadata$published_year,
                 metadata$published_month,

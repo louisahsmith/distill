@@ -907,6 +907,12 @@ article_info <- function(site_dir, article) {
   info$preview_width <- article$metadata$preview_width
   info$preview_height <- article$metadata$preview_height
 
+  # to avoid horrible error if you don't have a description and
+  # then read/write the json with an empty description to xml
+  if (is.null(article$metadata$description)) {
+    info$description <- NULL
+  }
+
   info
 }
 
